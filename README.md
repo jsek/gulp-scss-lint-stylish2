@@ -13,7 +13,7 @@ Stylish reporter for gulp-scss-lint, following the visual style of ESLint stylis
 
 Example console output:
 
-![screenshot](images/screenshot_0.0.1.png)
+![screenshot](images/screenshot_1.0.0.png)
 
 ## Installation
 
