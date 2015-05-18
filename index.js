@@ -72,6 +72,10 @@ logStylish = function(issues) {
     return x.replace(/(\d+)\s+(\d+)/, function(m, p1, p2) {
       return cl.gray(p1 + ':' + p2);
     });
+  }).map(function(x) {
+    return x.replace(/`([^`]*)`/g, function(m, p1) {
+      return "`" + (cl.cyan(p1)) + "`";
+    });
   }).join('\n');
   return console.log(results);
 };

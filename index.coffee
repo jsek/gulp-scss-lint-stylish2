@@ -47,6 +47,7 @@ logStylish    = (issues) ->
     results = table(data, tableOptions)
         .split '\n'
         .map (x) -> x.replace /(\d+)\s+(\d+)/, (m, p1, p2) -> cl.gray(p1 + ':' + p2)
+        .map (x) -> x.replace /`([^`]*)`/g, (m, p1) -> "`#{cl.cyan(p1)}`"
         .join '\n'
 
     console.log results
