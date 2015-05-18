@@ -18,7 +18,7 @@ Example console output:
 ## Installation
 
 ```
-npm install --save gulp-scss-lint-stylish
+npm install --save gulp-scss-lint-stylish2
 ```
 
 ## Usage
