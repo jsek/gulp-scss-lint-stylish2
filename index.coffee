@@ -49,7 +49,7 @@ logStylish    = (issues) ->
         .map (x) -> x.replace /(\d+)\s+(\d+)/, (m, p1, p2) -> cl.gray(p1 + ':' + p2)
         .join '\n'
 
-    console.log printResults
+    console.log results
 
 #------------------------------------------------------------------------------
 # Reporters
