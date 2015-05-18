@@ -1,0 +1,30 @@
+{
+  "name": "gulp-scss-lint-stylish2",
+  "version": "0.0.1",
+  "description": "Stylish reporter for gulp-scss-lint",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsek/gulp-scss-lint-stylish.git\""
+  },
+  "keywords": [
+    "scss-lint",
+    "stylish",
+    "reporter",
+    "scss"
+  ],
+  "author": "J-Sek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsek/gulp-scss-lint-stylish.git\"/issues"
+  },
+  "homepage": "https://github.com/jsek/gulp-scss-lint-stylish.git\"",
+  "dependencies": {
+    "gulp-util": "^3.0.4",
+    "text-table": "^0.2.0",
+    "through2": "^0.6.5"
+  }
+}
