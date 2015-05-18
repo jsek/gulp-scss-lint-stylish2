@@ -1,6 +1,6 @@
 {
   "name": "gulp-scss-lint-stylish2",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Stylish reporter for gulp-scss-lint",
   "main": "index.js",
   "scripts": {
