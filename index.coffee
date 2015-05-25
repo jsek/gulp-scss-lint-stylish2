@@ -18,11 +18,17 @@ severityColor =
 # Helpers
 #------------------------------------------------------------------------------
 
-printPath     = (path) -> '\n' + cl.magenta(path)
+printPath     = (path) -> 
+    filename = path.match(new RegExp("([^\\\\]+)\\.[a-zA-Z]+$"))[1]
+    extension = path.match(new RegExp("\\.([a-zA-Z]+)$"))[1]
+    dir = path.slice(0, path.length - filename.length - extension.length - 1)
+    return '\n' + cl.magenta(dir) + cl.yellow(filename) + cl.magenta('.' + extension)
+    
 printPlaceRaw = (issue) -> "(#{issue.line},#{issue.column})"
 printSeverity = (issue) -> severityColor[issue.severity](issue.severity)
 printLinter   = (issue) -> cl.gray(issue.linter)
 pluralize     = (word, count) -> if count > 1 then word + 's' else word
+passThrough   = (file, enc, cb) -> cb(null, file)
 
 printPathLine = (file) ->
     if (lastFailingFile != file.path)
@@ -50,7 +56,7 @@ logStylish    = (issues) ->
         .map (x) -> x.replace /`([^`]*)`/g, (m, p1) -> "`#{cl.cyan(p1)}`"
         .join '\n'
 
-    console.log results
+    results
 
 #------------------------------------------------------------------------------
 # Reporters
@@ -83,7 +89,6 @@ writeStylishResults = (results, fileFormatter, summaryFormatter) ->
     total = errors = warnings = 0
     
     for result in results
-        fileFormatter(result)
         total += result.scsslint.issues.length
         errors += result.scsslint.errors
         warnings += result.scsslint.warnings
@@ -92,18 +97,26 @@ writeStylishResults = (results, fileFormatter, summaryFormatter) ->
 
 reportWithSummary = (fileFormatter, summaryFormatter) ->
     results = []
-
-    passAll = (file, enc, cb) ->
-        unless file.scsslint.success then results.push(file)
-        cb(null, file)
-
-    printResults = (cb) ->
-        if results.length then writeStylishResults(results, fileFormatter, summaryFormatter)
-        # reset buffered results
-        results = []
-        cb()
-
-    return through.obj passAll, printResults
+    return {
+        issues: (file, stream) ->
+            unless file.scsslint.success
+                results.push file
+                process.stderr.write fileFormatter(file) + '\n'
+        
+        silent: (file, stream) ->
+            unless file.scsslint.success
+                results.push file
+            
+        files: (file, stream) ->
+            unless file.scsslint.success
+                results.push file
+                process.stderr.write printPath(file.path)
+        
+        printSummary: through.obj passThrough, ->
+            if results.length > 0
+                writeStylishResults(results, fileFormatter, summaryFormatter);
+            results = []
+    }
 
 stylishReporter = (opts) ->
     opts = opts or {}
@@ -114,6 +127,4 @@ stylishReporter = (opts) ->
 
 #------------------------------------------------------------------------------
 
-module.exports =
-    suppress: -> return
-    stylish: stylishReporter
+module.exports = stylishReporter

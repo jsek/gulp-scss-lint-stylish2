@@ -1,21 +1,48 @@
-var gulp      = require('gulp'),
-    scssLint  = require('gulp-scss-lint'),
-    reporters = require('gulp-scss-lint-stylish2');
+var gulp     = require('gulp'),
+    scssLint = require('gulp-scss-lint'),
+    stylish  = require('../../../../../Documents/Github/gulp-scss-lint-stylish2/index');
 
 gulp.task('scsslint', function() {
+    var reporter = stylish();
+    
     gulp.src(['./**/*.scss'])
         .pipe(scssLint({
             config: './scsslint.config.yml',
-            customReport: reporters.suppress
+            customReport: reporter.issues
         }))
-        .pipe(reporters.stylish());
+        .pipe(reporter.printSummary);
     });
 
 gulp.task('scsslint_errors', function() {
+    var reporter = stylish({ errorsOnly: true });
+    
     gulp.src(['./**/*.scss'])
         .pipe(scssLint({
             config: './scsslint.config.yml',
-            customReport: reporters.suppress
+            customReport: reporter.issues
         }))
-        .pipe(reporters.stylish({ errorsOnly: true }));
-});
+        .pipe(reporter.printSummary);
+    });
+
+gulp.task('scsslint_files', function() {
+    var reporter = stylish();
+    
+    gulp.src(['./**/*.scss'])
+        .pipe(scssLint({
+            config: './scsslint.config.yml',
+            customReport: reporter.files
+        }))
+        .pipe(reporter.printSummary);
+    });
+
+
+gulp.task('scsslint_silent', function() {
+    var reporter = stylish();
+    
+    gulp.src(['./**/*.scss'])
+        .pipe(scssLint({
+            config: './scsslint.config.yml',
+            customReport: reporter.silent
+        }))
+        .pipe(reporter.printSummary);
+    });

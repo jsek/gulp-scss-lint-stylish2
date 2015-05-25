@@ -3,7 +3,7 @@
  * @fileoverview Custom stylish reporter for gulp-scss-lint
  * @author J-Sek
  */
-var cl, gutil, lastFailingFile, logStylish, pluralize, printLinter, printPath, printPathLine, printPlaceRaw, printSeverity, reportWithSummary, severityColor, stylishErrorsSummary, stylishPrintErrorsInFile, stylishPrintFile, stylishReporter, stylishSummary, table, through, writeStylishResults;
+var cl, gutil, lastFailingFile, logStylish, passThrough, pluralize, printLinter, printPath, printPathLine, printPlaceRaw, printSeverity, reportWithSummary, severityColor, stylishErrorsSummary, stylishPrintErrorsInFile, stylishPrintFile, stylishReporter, stylishSummary, table, through, writeStylishResults;
 
 gutil = require('gulp-util');
 
@@ -21,7 +21,11 @@ severityColor = {
 };
 
 printPath = function(path) {
-  return '\n' + cl.magenta(path);
+  var dir, extension, filename;
+  filename = path.match(new RegExp("([^\\\\]+)\\.[a-zA-Z]+$"))[1];
+  extension = path.match(new RegExp("\\.([a-zA-Z]+)$"))[1];
+  dir = path.slice(0, path.length - filename.length - extension.length - 1);
+  return '\n' + cl.magenta(dir) + cl.yellow(filename) + cl.magenta('.' + extension);
 };
 
 printPlaceRaw = function(issue) {
@@ -42,6 +46,10 @@ pluralize = function(word, count) {
   } else {
     return word;
   }
+};
+
+passThrough = function(file, enc, cb) {
+  return cb(null, file);
 };
 
 printPathLine = function(file) {
@@ -77,7 +85,7 @@ logStylish = function(issues) {
       return "`" + (cl.cyan(p1)) + "`";
     });
   }).join('\n');
-  return console.log(results);
+  return results;
 };
 
 
@@ -119,7 +127,6 @@ writeStylishResults = function(results, fileFormatter, summaryFormatter) {
   total = errors = warnings = 0;
   for (i = 0, len = results.length; i < len; i++) {
     result = results[i];
-    fileFormatter(result);
     total += result.scsslint.issues.length;
     errors += result.scsslint.errors;
     warnings += result.scsslint.warnings;
@@ -130,22 +137,33 @@ writeStylishResults = function(results, fileFormatter, summaryFormatter) {
 };
 
 reportWithSummary = function(fileFormatter, summaryFormatter) {
-  var passAll, printResults, results;
+  var results;
   results = [];
-  passAll = function(file, enc, cb) {
-    if (!file.scsslint.success) {
-      results.push(file);
-    }
-    return cb(null, file);
+  return {
+    issues: function(file, stream) {
+      if (!file.scsslint.success) {
+        results.push(file);
+        return process.stderr.write(fileFormatter(file) + '\n');
+      }
+    },
+    silent: function(file, stream) {
+      if (!file.scsslint.success) {
+        return results.push(file);
+      }
+    },
+    files: function(file, stream) {
+      if (!file.scsslint.success) {
+        results.push(file);
+        return process.stderr.write(printPath(file.path));
+      }
+    },
+    printSummary: through.obj(passThrough, function() {
+      if (results.length > 0) {
+        writeStylishResults(results, fileFormatter, summaryFormatter);
+      }
+      return results = [];
+    })
   };
-  printResults = function(cb) {
-    if (results.length) {
-      writeStylishResults(results, fileFormatter, summaryFormatter);
-    }
-    results = [];
-    return cb();
-  };
-  return through.obj(passAll, printResults);
 };
 
 stylishReporter = function(opts) {
@@ -157,7 +175,4 @@ stylishReporter = function(opts) {
   }
 };
 
-module.exports = {
-  suppress: function() {},
-  stylish: stylishReporter
-};
+module.exports = stylishReporter;

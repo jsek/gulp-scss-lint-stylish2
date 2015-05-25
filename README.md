@@ -13,7 +13,7 @@ Stylish reporter for gulp-scss-lint, following the visual style of ESLint stylis
 
 Example console output:
 
-![screenshot](images/screenshot_1.0.0.png)
+![screenshot](images/screenshot_2.0.0.png)
 
 ## Installation
 
@@ -25,22 +25,43 @@ npm install --save gulp-scss-lint-stylish2
 
 ``` javascript
 var gulp      = require('gulp'),
-    scssLint  = require('gulp-scss-lint'),
-    reporters = require('gulp-scss-lint-stylish2');
+    scssLint = require('gulp-scss-lint'),
+    stylish  = require('gulp-scss-lint-stylish2');
  
 gulp.task('scss-lint', function()
 {
+    var reporter = stylish();
+
     gulp.src('/scss/*.scss')
-        .pipe( scssLint({ customReport: reporters.suppress }) )
-        .pipe( reporters.stylish() );
+        .pipe( scssLint({ customReport: reporter.issues }) )
+        .pipe( reporter.printSummary );
 });
 
 ```
 
-Alternative usage for errors:
+Use `errorsOnly` parameter to filter out warnings:
 
 ``` javascript
-    gulp.src('/scss/*.scss')
-        .pipe( scssLint({ customReport: reporters.suppress }) )
-        .pipe( reporters.stylish(errorsOnly: true) );
+    var reporter = stylish({ errorsOnly: true });
+
 ```
+
+![screenshot](images/screenshot_2.0.0-errors.png)
+
+You can list just the files:
+
+``` javascript
+        .pipe( scssLint({ customReport: reporter.files }) )
+        .pipe( reporter.printSummary );
+```
+
+![screenshot](images/screenshot_2.0.0-files.png)
+
+... or suppress output and print just the summary:
+
+``` javascript
+        .pipe( scssLint({ customReport: reporter.silent }) )
+        .pipe( reporter.printSummary );
+```
+
+![screenshot](images/screenshot_2.0.0-silent.png)
