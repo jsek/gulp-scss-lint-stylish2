@@ -1,6 +1,6 @@
 var gulp     = require('gulp'),
     scssLint = require('gulp-scss-lint'),
-    stylish  = require('../../../../../Documents/Github/gulp-scss-lint-stylish2/index');
+    stylish  = require('gulp-scss-lint-stylish2');
 
 gulp.task('scsslint', function() {
     var reporter = stylish();
