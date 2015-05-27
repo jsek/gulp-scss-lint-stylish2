@@ -3,7 +3,7 @@
  * @fileoverview Custom stylish reporter for gulp-scss-lint
  * @author J-Sek
  */
-var cl, gutil, lastFailingFile, logStylish, passThrough, pluralize, printLinter, printPath, printPathLine, printPlaceRaw, printSeverity, reportWithSummary, severityColor, stylishErrorsSummary, stylishPrintErrorsInFile, stylishPrintFile, stylishReporter, stylishSummary, table, through, writeStylishResults;
+var cl, gutil, lastFailingFile, logStylish, passThrough, pluralize, printLinter, printPath, printPathLine, printPlaceRaw, printSeverity, reportWithSummary, severityColor, stylishErrorsSummary, stylishPrintErrorsInFile, stylishPrintFile, stylishReporter, stylishSummary, table, through, writeStylishResults, writeSuccess;
 
 gutil = require('gulp-util');
 
@@ -122,7 +122,11 @@ stylishErrorsSummary = function(total, errors, warnings) {
   }
 };
 
-writeStylishResults = function(results, fileFormatter, summaryFormatter) {
+writeSuccess = function() {
+  return console.log(cl.green.bold("\n\u2714 Success! No issues found\n"));
+};
+
+writeStylishResults = function(results, summaryFormatter) {
   var errors, i, len, result, total, warnings;
   total = errors = warnings = 0;
   for (i = 0, len = results.length; i < len; i++) {
@@ -163,7 +167,9 @@ reportWithSummary = function(fileFormatter, summaryFormatter) {
     },
     printSummary: through.obj(passThrough, function() {
       if (results.length > 0) {
-        writeStylishResults(results, fileFormatter, summaryFormatter);
+        writeStylishResults(results, summaryFormatter);
+      } else {
+        writeSuccess();
       }
       return results = [];
     })

@@ -24,7 +24,7 @@ npm install --save gulp-scss-lint-stylish2
 ## Usage
 
 ``` javascript
-var gulp      = require('gulp'),
+var gulp     = require('gulp'),
     scssLint = require('gulp-scss-lint'),
     stylish  = require('gulp-scss-lint-stylish2');
  
@@ -36,14 +36,12 @@ gulp.task('scss-lint', function()
         .pipe( scssLint({ customReport: reporter.issues }) )
         .pipe( reporter.printSummary );
 });
-
 ```
 
 Use `errorsOnly` parameter to filter out warnings:
 
 ``` javascript
     var reporter = stylish({ errorsOnly: true });
-
 ```
 
 ![screenshot](images/screenshot_2.0.0-errors.png)

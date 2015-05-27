@@ -85,7 +85,10 @@ stylishErrorsSummary = (total, errors, warnings) ->
     if total > 0
         console.log cl.red.bold "\n\u2716  #{errors} #{pluralize('error', errors)}!\n"
 
-writeStylishResults = (results, fileFormatter, summaryFormatter) ->
+writeSuccess = ->
+    console.log cl.green.bold "\n\u2714 Success! No issues found\n"
+
+writeStylishResults = (results, summaryFormatter) ->
     total = errors = warnings = 0
     
     for result in results
@@ -116,7 +119,9 @@ reportWithSummary = (fileFormatter, summaryFormatter) ->
         
         printSummary: through.obj passThrough, ->
             if results.length > 0
-                writeStylishResults(results, fileFormatter, summaryFormatter);
+                writeStylishResults(results, summaryFormatter);
+            else
+                writeSuccess();
             results = []
     }
 
