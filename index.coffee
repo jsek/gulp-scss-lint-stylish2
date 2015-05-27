@@ -101,7 +101,9 @@ reportWithSummary = (fileFormatter, summaryFormatter) ->
         issues: (file, stream) ->
             unless file.scsslint.success
                 results.push file
-                process.stderr.write fileFormatter(file) + '\n'
+                fileIssues = fileFormatter(file)
+                if fileIssues
+                    process.stderr.write(fileIssues + '\n')
         
         silent: (file, stream) ->
             unless file.scsslint.success

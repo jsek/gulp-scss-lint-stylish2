@@ -141,9 +141,13 @@ reportWithSummary = function(fileFormatter, summaryFormatter) {
   results = [];
   return {
     issues: function(file, stream) {
+      var fileIssues;
       if (!file.scsslint.success) {
         results.push(file);
-        return process.stderr.write(fileFormatter(file) + '\n');
+        fileIssues = fileFormatter(file);
+        if (fileIssues) {
+          return process.stderr.write(fileIssues + '\n');
+        }
       }
     },
     silent: function(file, stream) {
