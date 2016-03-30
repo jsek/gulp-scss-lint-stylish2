@@ -165,14 +165,17 @@ reportWithSummary = function(fileFormatter, summaryFormatter) {
         return process.stderr.write(printPath(file.path));
       }
     },
-    printSummary: through.obj(passThrough, function() {
-      if (results.length > 0) {
-        writeStylishResults(results, summaryFormatter);
-      } else {
-        writeSuccess();
-      }
-      return results = [];
-    })
+    printSummary: function() {
+      return through.obj(passThrough, function() {
+        if (results.length > 0) {
+          writeStylishResults(results, summaryFormatter);
+        } else {
+          writeSuccess();
+        }
+        this.emit('end');
+        return results = [];
+      });
+    }
   };
 };
 
