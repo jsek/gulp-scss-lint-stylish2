@@ -1,9 +1,9 @@
 Stylish reporter for gulp-scss-lint, following the visual style of ESLint stylish reporter
 
-[![dependencies](https://david-dm.org/jsek/gulp-scss-lint-stylish2.png)](https://david-dm.org/jsek/gulp-scss-lint-stylish2) 
+[![dependencies](https://david-dm.org/jsek/gulp-scss-lint-stylish2.png)](https://david-dm.org/jsek/gulp-scss-lint-stylish2)
 [![licence](https://img.shields.io/npm/l/gulp-scss-lint-stylish2.svg)](https://github.com/jsek/gulp-scss-lint-stylish2/blob/master/LICENSE)
-[![npm version](http://img.shields.io/npm/v/gulp-scss-lint-stylish2.svg)](https://npmjs.org/package/gulp-scss-lint-stylish2) 
-[![downloads](https://img.shields.io/npm/dm/gulp-scss-lint-stylish2.svg)](https://npmjs.org/package/gulp-scss-lint-stylish2) 
+[![npm version](http://img.shields.io/npm/v/gulp-scss-lint-stylish2.svg)](https://npmjs.org/package/gulp-scss-lint-stylish2)
+[![downloads](https://img.shields.io/npm/dm/gulp-scss-lint-stylish2.svg)](https://npmjs.org/package/gulp-scss-lint-stylish2)
 
 * [Overview](#overview)
 * [Installation](#installation)
@@ -27,14 +27,14 @@ npm install --save gulp-scss-lint-stylish2
 var gulp     = require('gulp'),
     scssLint = require('gulp-scss-lint'),
     stylish  = require('gulp-scss-lint-stylish2');
- 
+
 gulp.task('scss-lint', function()
 {
     var reporter = stylish();
 
     gulp.src('/scss/*.scss')
         .pipe( scssLint({ customReport: reporter.issues }) )
-        .pipe( reporter.printSummary );
+        .pipe( reporter.printSummary() );
 });
 ```
 
@@ -50,7 +50,7 @@ You can list just the files:
 
 ``` javascript
         .pipe( scssLint({ customReport: reporter.files }) )
-        .pipe( reporter.printSummary );
+        .pipe( reporter.printSummary() );
 ```
 
 ![screenshot](images/screenshot_2.0.0-files.png)
@@ -59,7 +59,7 @@ You can list just the files:
 
 ``` javascript
         .pipe( scssLint({ customReport: reporter.silent }) )
-        .pipe( reporter.printSummary );
+        .pipe( reporter.printSummary() );
 ```
 
 ![screenshot](images/screenshot_2.0.0-silent.png)
